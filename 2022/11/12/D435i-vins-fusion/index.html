@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
-        <title>Hello World | 胡思乱想的兔喵</title>
+        <title>D435i+vins_fusion | 胡思乱想的兔喵</title>
         <meta name="author" content="Flaxen jeremy">
         <meta name="description" content="">
         <meta name="keywords" content="">
@@ -122,7 +122,7 @@
                         
 <div class="article">
     <div>
-        <h1>Hello World </h1>
+        <h1>D435i+vins_fusion </h1>
     </div>
     <div class="info">
         <span class="date">
@@ -135,19 +135,148 @@
         
     </div>
     <div class="content" v-pre>
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+        <p>相机：d435i</p>
+<p>环境：ubuntu20.04｜ROS Noetic｜Ceres 1.14| Eigen 3.3.7</p>
+<p>一.软件安装</p>
+<ul>
+<li>ROS安装</li>
+</ul>
+<pre><code class="bash">  $ sudo sh -c &#39;echo &quot;deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main&quot; &gt; /etc/apt/sources.list.d/ros-latest.list&#39;
+  $ sudo apt-key adv --keyserver &#39;hkp://keyserver.ubuntu.com:80&#39; --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+  $ sudo apt update
+  $ sudo apt install ros-noetic-desktop-full
+  $ echo &quot;source /opt/ros/noetic/setup.bash&quot; &gt;&gt; ~/.bashrc
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+<p>  #测试ROS<br>打开三个终端，分别输入</p>
+<pre><code class="bash">  $ roscore
+  $ rosrun turtlesim turtlesim_node
+  $ rosrun turtlesim turtle_teleop_key
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+<ul>
+<li>Terminator：</li>
+</ul>
+<pre><code class="bash">$ sudo apt install terminator
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
+<ul>
+<li>VScode：</li>
+</ul>
+<pre><code class="bash">$ sudo dpkg -i ***.deb
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<ul>
+<li>ceres与ddyanmic-reconfigure安装</li>
+</ul>
+<pre><code class="bash">  $ sudo apt-get install liblapack-dev libsuitesparse-dev libcxsparse3.1.2 libgflags-dev libgoogle-glog-dev libgtest-dev
+  $ git clone https://ceres-solver.googlesource.com/ceres-solver
+  $ mkdir build
+  $ cd build
+  $ cmake ..
+  $ sudo make -j8
+  $ sudo make install
+  $ sudo apt-get install ros-noetic-ddynamic-reconfigure
+</code></pre>
+<ul>
+<li>realsense驱动安装</li>
+</ul>
+<pre><code class="bash">  $ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key  F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key  F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE
+  $ sudo add-apt-repository &quot;deb https://librealsense.intel.com/Debian/apt-repo $(lsb_release -cs) main&quot; -u
+  $ sudo apt-get install librealsense2-dkms
+  $ sudo apt-get install librealsense2-utils
+  $ sudo apt-get install librealsense2-dev
+  $ sudo apt-get install librealsense2-dbg
+</code></pre>
+<pre><code>#测试：`realsense-viewer`(需要usb3.0，否则没有imu输入)
+</code></pre>
+<ul>
+<li>创建工作空间</li>
+</ul>
+<pre><code class="bash">  $ mkdir -p ~/catkin2_ws/src
+  $ cd ~/catkin_ws/src
+</code></pre>
+<ul>
+<li>下载vins-fusion源码并编译</li>
+</ul>
+<pre><code class="bash">  $ git clone https://github.com/HKUST-Aerial-Robotics/VINS-Fusion.git
+  $ cd ..
+  $ catkin_make
+  $ source devel/setup.bash
+</code></pre>
+<ul>
+<li>设置环境变量默认路径</li>
+</ul>
+<pre><code class="bash">  $ gedit ~/.bashrc
+</code></pre>
+<ul>
+<li>在最后加入</li>
+</ul>
+<pre><code class="bash">  $ source ~/catkin2_ws/devel/setup.bash
+</code></pre>
+<ul>
+<li>Realsense-Ros安装</li>
+</ul>
+<pre><code class="bash">  $ git clone https://github.com/IntelRealSense/realsense-ros.git
+  $ git clone https:://github.com/pal-robotics/ddynamic_reconfig.git
+  $ cd .. &amp;&amp; catkin_make
+</code></pre>
+<hr>
+<p>#Vins-fusion安装记录</p>
+<ul>
+<li>编译时报错</li>
+</ul>
+<pre><code class="bash">    error: ‘CV_GRAY2RGB’ was not declared in this scope
+</code></pre>
+<ul>
+<li>在报错文件上添加头文件</li>
+</ul>
+<pre><code class="bash">    #include &lt;opencv2/imgproc/imgproc_c.h&gt;
+</code></pre>
+<ul>
+<li>编译时报错</li>
+</ul>
+<pre><code class="bash">    error: ‘CV_RGB2GRAY’ was not declared in this scope
+</code></pre>
+<ul>
+<li>在报错文件上添加头文件</li>
+</ul>
+<pre><code class="bash">    #include &lt;opencv2/imgproc/imgproc_c.h&gt;
+</code></pre>
+<ul>
+<li>编译时报错</li>
+</ul>
+<pre><code class="bash">    error: ‘CV_CALIB_CB_ADAPTIVE_THRESH’ was not declared in this scope
+    error: ‘CV_CALIB_CB_NORMALIZE_IMAGE’ was not declared in this scope
+    error: ‘CV_CALIB_CB_FILTER_QUADS’ was not declared in this scope
+    error: ‘CV_CALIB_CB_FAST_CHECK’ was not declared in this scope
+</code></pre>
+<p>*修改为</p>
+<pre><code class="bash">    CV_CALIB_CB_ADAPTIVE_THRESH` ~ `cv::CALIB_CB_ADAPTIVE_THRESH
+    CV_CALIB_CB_NORMALIZE_IMAGE` ~ `cv::CALIB_CB_NORMALIZE_IMAGE
+    CV_CALIB_CB_FILTER_QUADS` ~ `cv::CALIB_CB_FILTER_QUADS
+    CV_CALIB_CB_FAST_CHECK` ~ `cv::CALIB_CB_FAST_CHECK
+</code></pre>
+<ul>
+<li>编译时报错</li>
+</ul>
+<pre><code class="bash">    error: ‘CV_AA’ was not declared in this scope
+</code></pre>
+<p>*修改为</p>
+<pre><code class="bash">    cv::LINE_AA
+</code></pre>
+<ul>
+<li>编译时遇到报错</li>
+</ul>
+<pre><code class="bash">    error: ‘CV_FONT_HERSHEY_SIMPLEX’ was not declared in this scope
+</code></pre>
+<p>*修改为</p>
+<pre><code class="bash">    cv::FONT_HERSHEY_SIMPLEX
+</code></pre>
+<ul>
+<li>编译时遇到报错</li>
+</ul>
+<pre><code class="bash">    error: ‘CV_LOAD_IMAGE_GRAYSCALE’ was not declared in this scope
+</code></pre>
+<p>修改为</p>
+<pre><code class="bash">    cv::IMREAD_GRAYSCALE
+</code></pre>
 
     </div>
     
